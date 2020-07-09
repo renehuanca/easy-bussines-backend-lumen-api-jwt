@@ -36,3 +36,7 @@ $router->group(['prefix' => 'api'], function() use ($router) {
     $router->delete('customers/{id}', 'CustomerController@delete');
 
 });
+
+$router->get('/key', function() {
+    return \Illuminate\Support\Str::random(32);
+});
