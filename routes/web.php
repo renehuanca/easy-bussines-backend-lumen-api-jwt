@@ -27,5 +27,12 @@ $router->group(['prefix' => 'api'], function() use ($router) {
     $router->post('refresh', 'AuthController@refresh');
 
     $router->get('users', 'UserController@showAllUsers');
-    
+
+    // Matches /api/customers
+    $router->get('customers', 'CustomerController@index');
+    $router->get('customers/{id}', 'CustomerController@show');
+    $router->post('customers', 'CustomerController@store');
+    $router->put('customers/{id}', 'CustomerController@update');
+    $router->delete('customers/{id}', 'CustomerController@delete');
+
 });
