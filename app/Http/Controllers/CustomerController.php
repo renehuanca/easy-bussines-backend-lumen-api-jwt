@@ -65,7 +65,7 @@ class CustomerController extends Controller
         //validate incoming request
         $this->validate($request, [
             'name' => 'required|string',
-            'email' => 'required|email|unique:customers',
+            'email' => 'required|email',
             'company' => 'string',
             'country' => 'string',
         ]);
