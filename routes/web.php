@@ -35,6 +35,9 @@ $router->group(['prefix' => 'api'], function() use ($router) {
     $router->put('customers/{id}', 'CustomerController@update');
     $router->delete('customers/{id}', 'CustomerController@delete');
 
+    //categorires
+    $router->get('categories', 'CategoryController@index');
+
 });
 
 $router->get('/key', function() {
