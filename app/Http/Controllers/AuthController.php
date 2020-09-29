@@ -29,7 +29,8 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
+        // if (! $token = auth()->setTTL(7200)->attempt($credentials)) {
+            if (! $token = auth()->setTTL(50)->attempt($credentials)) { //5 minutes
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -43,7 +44,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        return response()->json( auth()->user() );
     }
 
     /**

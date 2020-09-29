@@ -3,7 +3,6 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Customer;
-use App\User;
 use Faker\Generator as Faker;
 
 /*
@@ -18,13 +17,17 @@ use Faker\Generator as Faker;
 */
 
 $factory->define(Customer::class, function (Faker $faker) {
-    $user = User::find(rand(0, 3));
     return [
         'name' => $faker->name,
         'email' => $faker->email,
         'phone' => $faker->phoneNumber,
         'company' => $faker->domainName,
-        'last_user' => $user->name,
+        'country' => $faker->country,
+        'city' => $faker->city,
+        'website' => $faker->domainName,
+        'social' => $faker->domainName,
+        'history' => $faker->text,
+        'last_user' => 'example',
         'state' => $faker->numberBetween(0, 1)
     ];
 });

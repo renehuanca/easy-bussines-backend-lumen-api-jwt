@@ -15,15 +15,33 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'name' => 'example',
-            'email' => 'example@gmail.com',
-            'password' => Hash::make('example123')
+            'name' => 'rene',
+            'first_name' => 'René Gonzalo',
+            'last_name' => 'Huanca Mamani',
+            'address' => 'z. Senkata 79 av Uvinas #1021',
+            'city' => 'El Alto',
+            'country' => 'Bolivia',
+            'about_me' => 'Todos necesitamos embriagarnos de algo para seguir adelante.',
+            'phone' => '78828568',
+            'email' => 'rene@gmail.com',
+            'password' => Hash::make('rene123'),
+            'last_user' => 'juan'
         ]);
 
         DB::table('users')->insert([
             'name' => 'juan',
+            'first_name' => 'Juan',
+            'last_name' => 'Quispe',
+            'address' => 'Ventilla #1021',
+            'city' => 'El Alto',
+            'country' => 'Bolivia',
+            'about_me' => 'Debe ser una descripcion nuestra',
+            'phone' => '7747733',
             'email' => 'juan@gmail.com',
-            'password' => Hash::make('juan123')
+            'password' => Hash::make('juan123'),
+            'last_user' => 'juan'
         ]);
+
+        factory(User::class, 20)->create();
     }
 }

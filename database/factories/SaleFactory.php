@@ -2,9 +2,11 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Categorie;
 use App\User;
 use Faker\Generator as Faker;
+use App\Product;
+use App\Sale;
+use App\Customer;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,11 +19,19 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(Categorie::class, function (Faker $faker) {
-    $user = User::find($faker->numberBetween(1, 2));
+$factory->define(Sale::class, function (Faker $faker) {
     return [
-        'name' => $faker->word,
-        'last_user' => $faker->name,
+        'quantity' => $faker->numberBetween(100, 200),
+        'total' => 0,
+        'product_id' => function () {
+            return Product::where('state', 1)->inRandomOrder()->first()->id;
+        },
+        'customer_id' => function () {
+            return Customer::where('state', 1)->inRandomOrder()->first()->id;
+        },
+        'last_user' => function () {
+            return User::inRandomOrder()->first()->name;
+        },
         'state' => $faker->numberBetween(0, 1)
     ];
 });

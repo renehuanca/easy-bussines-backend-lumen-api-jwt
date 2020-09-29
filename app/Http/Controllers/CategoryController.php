@@ -19,13 +19,13 @@ class CategoryController extends Controller
     }
 
     /**
-     * Get all Customers.
+     * Get all Categories.
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        $categories = Customer::where('state', 1)
+        $categories = Categorie::where('state', 1)
                                 ->orderBy('created_at', 'DESC')
                                 ->get();
         try {
@@ -36,7 +36,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Get one Customers.
+     * Get one Categories.
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -44,17 +44,17 @@ class CategoryController extends Controller
     public function show($id)
     {
         try {
-            $customer = Customer::where('id', $id)
+            $category = Categorie::where('id', $id)
                                 ->where('state', 1)
                                 ->get();
-            return response()->json(['customer' =>  $customer], 200);
+            return response()->json(['category' =>  $category], 200);
         } catch ( Exception $error ) {
-            return response()->json(['message' => 'Customer not found!'], 404);
+            return response()->json(['message' => 'Category not found!'], 404);
         }
     }
 
     /**
-     * Store Customer.
+     * Store Categorie.
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -65,34 +65,23 @@ class CategoryController extends Controller
         //validate incoming request
         $this->validate($request, [
             'name' => 'required|string',
-            'email' => 'required|email',
-            'company' => 'string',
-            'country' => 'string',
         ]);
 
         try {
-            $customer = new Customer();
-            $customer->name = $request->input('name');
-            $customer->email = $request->input('email');
-            $customer->phone = $request->input('phone');
-            $customer->company = $request->input('company');
-            $customer->country = $request->input('country');
-            $customer->city = $request->input('city');
-            $customer->website = $request->input('website');
-            $customer->social = $request->input('social');
-            $customer->history = $request->input('history');
-            $customer->last_user = $request->input('last_user');
-            $customer->state = $request->input('state');
-            $customer->save();
+            $category = new Categorie();
+            $category->name = $request->input('name');
+            $category->last_user = $request->input('last_user');
+            $category->state = $request->input('state');
+            $category->save();
 
-            return response()->json(['customer' => $customer, 'message' => 'CREATED'], 201);
+            return response()->json(['category' => $category, 'message' => 'CREATED'], 201);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Customer Registration Failed!'], 409);
+            return response()->json(['message' => 'Category Registration Failed!'], 409);
         }
     }
 
     /**
-     * Update Customers.
+     * Update Categories.
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -103,37 +92,35 @@ class CategoryController extends Controller
         //validate incoming request
         $this->validate($request, [
             'name' => 'required|string',
-            'email' => 'required|email',
-            'company' => 'string',
-            'country' => 'string',
         ]);
-        $customer = Customer::findOrFail($id);
+        $category = Categorie::findOrFail($id);
         try {
-            $customer->update($request->all());
+            $category->update($request->all());
 
-            return response()->json(['customer' => $customer, 'message' => 'UPDATED'], 201);
+            return response()->json(['category' => $category, 'message' => 'UPDATED'], 201);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Customer Registration Failed!'], 409);
+            return response()->json(['message' => 'Category Registration Failed!'], 409);
         }
     }
 
     /**
-     * Delete Customers.
+     * Delete Categories.
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function delete($id)
+    public function delete($id, Request $request)
     {
-        try {
-            $customer = Customer::where('id', $id)
-                                ->where('state', 1)
-                                ->update(['state' => 0]);
 
-            return response()->json(['customer' => $customer, 'message' => 'DELETED'], 201);
+        try {
+            $category = Categorie::where('id', $id)
+                                ->where('state', 1)
+                                ->update(['last_user' => $request->last_user, 'state' => 0]);
+            $category = Categorie::findOrFail($id);
+            return response()->json(['category' => $category, 'message' => 'DELETED'], 201);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Customer Elimination Failed!'], 409);
+            return response()->json(['message' => 'Category Elimination Failed!'], 409);
         }
     }
 }

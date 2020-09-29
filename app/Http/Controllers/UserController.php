@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 
 use  App\User;
@@ -46,6 +47,37 @@ class UserController extends Controller
         } catch (\Exception $e) {
 
             return response()->json(['message' => 'user not found!'], 404);
+        }
+    }
+
+    /**
+     * Update one user
+     * 
+     * @param int $id
+     * @return void
+     */
+    public function update(Request $request, $id) 
+    {
+        //validate incoming request
+        $this->validate($request, [
+            'name' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'email' => 'required|email',
+            'password' => 'required|confirmed',
+        ]);
+        $user = User::findOrFail($id);
+        try {
+        
+            $request->password =  Hash::make($request->password);
+
+            $user->update($request->all());
+            //return successful response
+            return response()->json(['user' => $user, 'message' => 'UPDATED'], 200);
+
+        } catch (\Exception $e) {
+            //return error message
+            return response()->json(['message' => 'User update Failed!'], 409);
         }
     }
 }

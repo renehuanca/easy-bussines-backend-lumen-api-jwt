@@ -2,9 +2,9 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Categorie;
 use App\User;
 use Faker\Generator as Faker;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,11 +17,18 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(Categorie::class, function (Faker $faker) {
-    $user = User::find($faker->numberBetween(1, 2));
+$factory->define(User::class, function (Faker $faker) {
     return [
-        'name' => $faker->word,
-        'last_user' => $faker->name,
-        'state' => $faker->numberBetween(0, 1)
+        'name' => $faker->name,
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
+        'address' => $faker->address,
+        'city' => $faker->city,
+        'country' => $faker->country,
+        'about_me' => $faker->text,
+        'phone' => $faker->phoneNumber,
+        'email' => $faker->unique()->safeEmail,
+        'password' => Str::random(10),
+        'last_user' => 'example '
     ];
 });

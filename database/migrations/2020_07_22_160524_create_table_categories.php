@@ -13,8 +13,12 @@ class CreateTableCategories extends Migration
      */
     public function up()
     {
-        Schema::table('categories', function (Blueprint $table) {
-            //
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('last_user');
+            $table->tinyInteger('state');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +29,6 @@ class CreateTableCategories extends Migration
      */
     public function down()
     {
-        Schema::table('categories', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('categories');
     }
 }

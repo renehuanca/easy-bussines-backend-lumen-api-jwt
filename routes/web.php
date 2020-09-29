@@ -18,7 +18,7 @@ $router->get('/', function () use ($router) {
 });
 
 // api router group with prefix api
-$router->group(['prefix' => 'api'], function() use ($router) {
+$router->group(['prefix' => 'api/v1'], function() use ($router) {
     // Matches /api/users
     $router->post('users', 'AuthController@register');
     $router->post('login', 'AuthController@login');
@@ -27,6 +27,7 @@ $router->group(['prefix' => 'api'], function() use ($router) {
     $router->post('refresh', 'AuthController@refresh');
 
     $router->get('users', 'UserController@showAllUsers');
+    $router->put('users/{id}', 'UserController@update');
 
     // Matches /api/customers
     $router->get('customers', 'CustomerController@index');
@@ -35,8 +36,12 @@ $router->group(['prefix' => 'api'], function() use ($router) {
     $router->put('customers/{id}', 'CustomerController@update');
     $router->delete('customers/{id}', 'CustomerController@delete');
 
-    //categorires
+    //categories
     $router->get('categories', 'CategoryController@index');
+    $router->get('categories/{id}', 'CategoryController@show');
+    $router->post('categories', 'CategoryController@store');
+    $router->put('categories/{id}', 'CategoryController@update');
+    $router->delete('categories/{id}', 'CategoryController@delete');
 
 });
 
