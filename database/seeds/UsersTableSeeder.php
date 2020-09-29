@@ -25,7 +25,9 @@ class UsersTableSeeder extends Seeder
             'phone' => '78828568',
             'email' => 'rene@gmail.com',
             'password' => Hash::make('rene123'),
-            'last_user' => 'juan'
+            'last_user' => 'juan',
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d'),
         ]);
 
         DB::table('users')->insert([
@@ -39,7 +41,9 @@ class UsersTableSeeder extends Seeder
             'phone' => '7747733',
             'email' => 'juan@gmail.com',
             'password' => Hash::make('juan123'),
-            'last_user' => 'juan'
+            'last_user' => 'juan',
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d'),
         ]);
 
         factory(User::class, 20)->create();
