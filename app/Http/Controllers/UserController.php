@@ -65,6 +65,7 @@ class UserController extends Controller
             'last_name' => 'required|string',
             'email' => 'required|email',
             'password' => 'required|confirmed',
+            'password_confirmed' => 'required',
         ]);
         $user = User::findOrFail($id);
         try {

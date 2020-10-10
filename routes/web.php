@@ -13,9 +13,12 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
+// $router->get('/', function () use ($router) {
+//     return $router->app->version();
+// });
+
+$router->get('/', 'WelcomeController@index');
+
 
 // api router group with prefix api
 $router->group(['prefix' => 'api/v1'], function() use ($router) {
@@ -45,6 +48,9 @@ $router->group(['prefix' => 'api/v1'], function() use ($router) {
 
 });
 
+// Generate key to .env
 $router->get('/key', function() {
     return \Illuminate\Support\Str::random(32);
 });
+
+

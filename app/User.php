@@ -28,7 +28,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'about_me',
         'phone',
         'email',
-        'last_user'
+        'last_user',
+        'password',
     ];
 
     /**
@@ -36,9 +37,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @var array
      */
-    protected $hidden = [
-        'password',
-    ];
+    // protected $hidden = [
+    //     'password',
+    // ];
 
      /**
      * Get the identifier that will be stored in the subject claim of the JWT.
