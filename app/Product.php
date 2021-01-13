@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Categorie;
 
 class Product extends Model
 {
@@ -15,10 +16,18 @@ class Product extends Model
         'name',
         'quantity',
         'unit_price',
-        'total',
+        'total_in_stock',
         'category_id',
         'last_user',
-        'state',
+        'is_deleted'
     ];
+
+     /**
+     * Get the categorie that owns the product.
+     */
+    public function categorie()
+    {
+        return $this->belongsTo(Categorie::class);
+    }
 
 }

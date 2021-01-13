@@ -24,14 +24,14 @@ $factory->define(Sale::class, function (Faker $faker) {
         'quantity' => $faker->numberBetween(100, 200),
         'total' => 0,
         'product_id' => function () {
-            return Product::where('state', 1)->inRandomOrder()->first()->id;
+            return Product::where('is_deleted', 0)->inRandomOrder()->first()->id;
         },
         'customer_id' => function () {
-            return Customer::where('state', 1)->inRandomOrder()->first()->id;
+            return Customer::where('is_deleted', 0)->inRandomOrder()->first()->id;
         },
         'last_user' => function () {
-            return User::inRandomOrder()->first()->name;
+            return User::inRandomOrder()->first()->id;
         },
-        'state' => $faker->numberBetween(0, 1)
+        'is_deleted' => $faker->numberBetween(0, 1)
     ];
 });

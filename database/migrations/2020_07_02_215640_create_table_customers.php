@@ -24,8 +24,8 @@ class CreateTableCustomers extends Migration
             $table->string('website');
             $table->string('social');
             $table->text('history');
-            $table->string('last_user');
-            $table->tinyInteger('state');
+            $table->integer('last_user');
+            $table->tinyInteger('is_deleted');
             $table->timestamps();
         });
     }

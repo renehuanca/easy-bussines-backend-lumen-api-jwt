@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Customer;
+use App\Product;
 use Exception;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
 
-class CustomerController extends Controller
+class ProductController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -19,121 +22,133 @@ class CustomerController extends Controller
     }
 
     /**
-     * Get all Customers.
+     * Get all Products.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function index()
     {
-        $customers = Customer::where('state', 1)
-                                ->orderBy('created_at', 'DESC')
-                                ->get();
         try {
-            return response()->json(['customers' =>  $customers], 200);
+            $products = DB::table('categories')
+                ->join('products', 'products.category_id', '=', 'categories.id')
+                ->select('products.*', 'categories.id as category_id', 'categories.name as category_name')
+                ->where('products.is_deleted', 0)
+                ->orderBy('created_at', 'DESC')
+                ->get();
+
+            return response()->json(['products' =>  $products], 200);
         } catch ( Exception $error ) {
-            return response()->json(['message' => 'Customers not found!'], 404);
+
+            return response()->json(['message' => 'Products not found!', $error], 404);
         }
     }
 
     /**
-     * Get one Customers.
+     * Get one Products.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param $id
+     * @return JsonResponse
      */
     public function show($id)
     {
         try {
-            $customer = Customer::where('id', $id)
-                                ->where('state', 1)
-                                ->get();
-            return response()->json(['customer' =>  $customer], 200);
+            $product = DB::table('categories')
+                ->join('products', 'products.category_id', '=', 'categories.id')
+                ->select('products.*', 'categories.id as category_id','categories.name as category_name')
+                ->where('products.is_deleted', 0)
+                ->where('products.id', $id)
+                ->first();
+
+            return response()->json(['product' =>  $product], 200);
         } catch ( Exception $error ) {
-            return response()->json(['message' => 'Customer not found!'], 404);
+
+            return response()->json(['message' => 'Product not found!'], 404);
         }
     }
 
     /**
-     * Store Customer.
+     * Store Product.
      *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @return JsonResponse
+     * @throws ValidationException
      */
     public function store(Request $request)
     {
         //validate incoming request
         $this->validate($request, [
             'name' => 'required|string',
-            'email' => 'required|email',
-            'company' => 'string',
-            'country' => 'string',
+            'quantity' => 'required|integer',
+            'unit_price' => 'required',
+            'total_in_stock' => 'required',
         ]);
 
         try {
-            $customer = new Customer();
-            $customer->name = $request->input('name');
-            $customer->email = $request->input('email');
-            $customer->phone = $request->input('phone');
-            $customer->company = $request->input('company');
-            $customer->country = $request->input('country');
-            $customer->city = $request->input('city');
-            $customer->website = $request->input('website');
-            $customer->social = $request->input('social');
-            $customer->history = $request->input('history');
-            $customer->last_user = $request->input('last_user');
-            $customer->state = $request->input('state');
-            $customer->save();
+            $Product = new Product();
+            $Product->name = $request->input('name');
+            $Product->quantity = $request->input('quantity');
+            $Product->unit_price = $request->input('unit_price');
+            $Product->total_in_stock = $request->input('total_in_stock');
+            $Product->category_id = $request->input('category_id');
+            $Product->last_user = auth()->user()->id;
+            $Product->is_deleted = 0;
+            $Product->save();
 
-            return response()->json(['customer' => $customer, 'message' => 'CREATED'], 201);
+            return response()->json(['product' => $Product, 'message' => 'CREATED'], 201);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Customer Registration Failed!'], 409);
+
+            return response()->json(['message' => 'Product Registration Failed!', $e], 409);
         }
     }
 
     /**
-     * Update Customers.
+     * Update Products.
      *
+     * @param $id
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @return JsonResponse
+     * @throws ValidationException
      */
     public function update($id, Request $request)
     {
         //validate incoming request
         $this->validate($request, [
             'name' => 'required|string',
-            'email' => 'required|email',
-            'company' => 'string',
-            'country' => 'string',
+            'quantity' => 'required|integer',
+            'unit_price' => 'required',
+            'total_in_stock' => 'required',
         ]);
-        $customer = Customer::findOrFail($id);
-        try {
-            $customer->update($request->all());
 
-            return response()->json(['customer' => $customer, 'message' => 'UPDATED'], 201);
+        try {
+            $Product = Product::findOrFail($id);
+            $Product->last_user = auth()->user()->id;
+            $Product->update($request->all());
+
+            return response()->json(['product' => $Product, 'message' => 'UPDATED'], 201);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Customer Registration Failed!'], 409);
+
+            return response()->json(['message' => 'Product Registration Failed!'], 409);
         }
     }
 
     /**
-     * Delete Customers.
+     * Delete Products.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @param $id
+     * @return JsonResponse
      */
     public function delete($id)
     {
         try {
-            $customer = Customer::where('id', $id)
-                                ->where('state', 1)
-                                ->update(['state' => 0]);
+            $product = Product::findOrFail($id);
+            $product->last_user = auth()->user()->id;
+            $product->is_deleted = 1;
+            $product->save();
 
-            return response()->json(['customer' => $customer, 'message' => 'DELETED'], 201);
+            return response()->json(['product' => $product, 'message' => 'DELETED'], 201);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Customer Elimination Failed!'], 409);
+
+            return response()->json(['message' => 'Product Elimination Failed!'], 409);
         }
     }
 }

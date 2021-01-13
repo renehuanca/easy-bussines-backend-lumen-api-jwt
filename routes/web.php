@@ -19,25 +19,45 @@
 
 $router->get('/', 'WelcomeController@index');
 
-
-// api router group with prefix api
+// api router group with prefix /api/v1
 $router->group(['prefix' => 'api/v1'], function() use ($router) {
-    // Matches /api/users
-    $router->post('users', 'AuthController@register');
+    // Matches with api/v1
+
+    // auth
+    $router->post('register', 'AuthController@register');
     $router->post('login', 'AuthController@login');
     $router->post('me', 'AuthController@me');
     $router->post('logout', 'AuthController@logout');
     $router->post('refresh', 'AuthController@refresh');
 
-    $router->get('users', 'UserController@showAllUsers');
-    $router->put('users/{id}', 'UserController@update');
+    // Dashboard
+        // Cards in dashboard
+        $router->get('monthly-earning', 'DashboardController@monthlyEarning');
+        $router->get('annual-earning', 'DashboardController@annualEarning');
+        $router->get('earnings-per-month-diagram', 'DashboardController@earningsPerMonthDiagram');
+        // $router->get('earnings-per-day-this-week', 'DashboardController@earningsPerDayThisWeek');
 
-    // Matches /api/customers
+
+    // users
+    $router->post('update-password', 'UpdatePasswordController@update');
+    $router->get('users', 'UserController@index');
+    $router->get('users/{id}', 'UserController@edit');
+    $router->put('users/{id}', 'UserController@update');
+    $router->delete('users/{id}', 'UserController@active');
+
+    // customers
     $router->get('customers', 'CustomerController@index');
     $router->get('customers/{id}', 'CustomerController@show');
     $router->post('customers', 'CustomerController@store');
     $router->put('customers/{id}', 'CustomerController@update');
     $router->delete('customers/{id}', 'CustomerController@delete');
+
+    //products
+    $router->get('products', 'ProductController@index');
+    $router->get('products/{id}', 'ProductController@show');
+    $router->post('products', 'ProductController@store');
+    $router->put('products/{id}', 'ProductController@update');
+    $router->delete('products/{id}', 'ProductController@delete');
 
     //categories
     $router->get('categories', 'CategoryController@index');
@@ -46,6 +66,15 @@ $router->group(['prefix' => 'api/v1'], function() use ($router) {
     $router->put('categories/{id}', 'CategoryController@update');
     $router->delete('categories/{id}', 'CategoryController@delete');
 
+    //sales
+    $router->get('sales', 'SaleController@index');
+    $router->get('sales/{id}', 'SaleController@show');
+    $router->post('sales', 'SaleController@store');
+    $router->delete('sales/{id}', 'SaleController@delete');
+
+    // general settings
+    $router->get('settings/{id}', 'SettingController@show');
+    $router->put('settings/{id}', 'SettingController@update');
 });
 
 // Generate key to .env

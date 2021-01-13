@@ -23,8 +23,8 @@ $factory->define(Expense::class, function (Faker $faker) {
         'amount' => $faker->numberBetween(100, 200),
         'type' => $faker->word,
         'last_user' => function () {
-            return User::inRandomOrder()->first()->name;
+            return User::inRandomOrder()->first()->id;
         },
-        'state' => $faker->numberBetween(0, 1)
+        'is_deleted' => $faker->numberBetween(0, 1)
     ];
 });

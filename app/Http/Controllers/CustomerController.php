@@ -25,12 +25,15 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::where('state', 1)
-                                ->orderBy('created_at', 'DESC')
-                                ->get();
+
         try {
+            $customers = Customer::where('is_deleted', 0)
+                ->orderBy('created_at', 'DESC')
+                ->get();
+
             return response()->json(['customers' =>  $customers], 200);
-        } catch ( Exception $error ) {
+        } catch (Exception $error) {
+
             return response()->json(['message' => 'Customers not found!'], 404);
         }
     }
@@ -45,10 +48,12 @@ class CustomerController extends Controller
     {
         try {
             $customer = Customer::where('id', $id)
-                                ->where('state', 1)
-                                ->get();
+                ->where('is_deleted', 0)
+                ->firstOrFail();
+                
             return response()->json(['customer' =>  $customer], 200);
-        } catch ( Exception $error ) {
+        } catch (Exception $error) {
+
             return response()->json(['message' => 'Customer not found!'], 404);
         }
     }
@@ -66,8 +71,6 @@ class CustomerController extends Controller
         $this->validate($request, [
             'name' => 'required|string',
             'email' => 'required|email',
-            'company' => 'string',
-            'country' => 'string',
         ]);
 
         try {
@@ -81,13 +84,14 @@ class CustomerController extends Controller
             $customer->website = $request->input('website');
             $customer->social = $request->input('social');
             $customer->history = $request->input('history');
-            $customer->last_user = $request->input('last_user');
-            $customer->state = $request->input('state');
+            $customer->last_user = auth()->user()->id;
+            $customer->is_deleted = 0;
             $customer->save();
 
             return response()->json(['customer' => $customer, 'message' => 'CREATED'], 201);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Customer Registration Failed!'], 409);
+
+            return response()->json(['message' => 'Customer Registration Failed!', $e], 409);
         }
     }
 
@@ -104,16 +108,20 @@ class CustomerController extends Controller
         $this->validate($request, [
             'name' => 'required|string',
             'email' => 'required|email',
-            'company' => 'string',
-            'country' => 'string',
         ]);
-        $customer = Customer::findOrFail($id);
+
         try {
+            $customer = Customer::where('id', $id)
+                ->where('is_deleted', 0)
+                ->firstOrFail();
+
+            $customer->last_user = auth()->user()->id;
             $customer->update($request->all());
 
             return response()->json(['customer' => $customer, 'message' => 'UPDATED'], 201);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Customer Registration Failed!'], 409);
+
+            return response()->json(['message' => 'Customer Updated Failed!'], 409);
         }
     }
 
@@ -127,12 +135,14 @@ class CustomerController extends Controller
     public function delete($id)
     {
         try {
-            $customer = Customer::where('id', $id)
-                                ->where('state', 1)
-                                ->update(['state' => 0]);
+            $customer = Customer::findOrFail($id);
+            $customer->last_user = auth()->user()->id;
+            $customer->is_deleted = 1;
+            $customer->save();
 
-            return response()->json(['customer' => $customer, 'message' => 'DELETED'], 201);
+            return response()->json(['customer' => $customer, 'message' => 'DELETED'], 200);
         } catch (Exception $e) {
+
             return response()->json(['message' => 'Customer Elimination Failed!'], 409);
         }
     }

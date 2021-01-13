@@ -23,13 +23,13 @@ $factory->define(Product::class, function (Faker $faker) {
         'name' => $faker->name,
         'quantity' => $faker->numberBetween(1, 20),
         'unit_price' => $faker->numberBetween(100, 200),
-        'total' => 0,
+        'total_in_stock' => 0,
         'category_id' => function () {
-            return Categorie::where('state', 1)->inRandomOrder()->first()->id;
+            return Categorie::where('is_deleted', 0)->inRandomOrder()->first()->id;
         },
         'last_user' => function () {
-            return User::inRandomOrder()->first()->name;
+            return User::inRandomOrder()->first()->id;
         },
-        'state' => $faker->numberBetween(0, 1)
+        'is_deleted' => $faker->numberBetween(0, 1)
     ];
 });

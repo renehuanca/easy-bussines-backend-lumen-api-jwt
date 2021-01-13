@@ -8,6 +8,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 
+
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -58,6 +59,9 @@ $app->singleton(
 | the default version. You may register other files below as needed.
 |
 */
+
+// ESTO SE AGREGÓ PARA USAR EL ESPAÑISH VALIDATIONS
+config(['app.locale' => 'es']);
 
 $app->configure('app');
 

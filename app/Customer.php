@@ -22,7 +22,7 @@ class Customer extends Model
         'social',
         'history',
         'last_user',
-        'state'
+        'is_deleted'
     ];
 
 }

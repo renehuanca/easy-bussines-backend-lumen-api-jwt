@@ -25,7 +25,8 @@ class UsersTableSeeder extends Seeder
             'phone' => '78828568',
             'email' => 'rene@gmail.com',
             'password' => Hash::make('rene123'),
-            'last_user' => 'juan',
+            'last_user' => 1,
+            'state' => 1,
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d'),
         ]);
@@ -41,7 +42,8 @@ class UsersTableSeeder extends Seeder
             'phone' => '7747733',
             'email' => 'juan@gmail.com',
             'password' => Hash::make('juan123'),
-            'last_user' => 'juan',
+            'last_user' => 1,
+            'state' => 1,
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d'),
         ]);

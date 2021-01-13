@@ -23,9 +23,10 @@ class CreateTableUsers extends Migration
             $table->string('country');
             $table->text('about_me');
             $table->string('phone');
-            $table->string('email')->unique()->notNullable();
+            $table->string('email')->unique();
             $table->string('password');
-            $table->string('last_user');
+            $table->integer('last_user');
+            $table->tinyInteger('state');
             $table->timestamps();
         });
     }

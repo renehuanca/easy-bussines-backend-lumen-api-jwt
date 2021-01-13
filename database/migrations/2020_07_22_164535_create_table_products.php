@@ -17,12 +17,12 @@ class CreateTableProducts extends Migration
             $table->id();
             $table->string('name');
             $table->integer('quantity');
-            $table->double('unit_price');
-            $table->double('total');
+            $table->double('unit_price',8, 2);
+            $table->double('total_in_stock',8, 2);
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->references('id')->on('categories');
-            $table->string('last_user');
-            $table->tinyInteger('state');
+            $table->integer('last_user');
+            $table->tinyInteger('is_deleted');
             $table->timestamps();
         });
     }

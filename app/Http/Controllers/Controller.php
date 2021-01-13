@@ -17,7 +17,7 @@ class Controller extends BaseController
     protected function respondWithToken($token)
     {
         return response()->json([
-            'id' =>  auth()->user()->id, 
+            'id' =>  auth()->user()->id,
             'name' =>  auth()->user()->name,   // add to username
             'access_token' => $token,
             'token_type' => 'bearer',

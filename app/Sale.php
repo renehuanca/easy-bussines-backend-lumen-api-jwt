@@ -17,7 +17,7 @@ class Sale extends Model
         'product_id',
         'customer_id',
         'last_user',
-        'state',
+        'is_deleted'
     ];
 
 }

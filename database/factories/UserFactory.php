@@ -29,6 +29,7 @@ $factory->define(User::class, function (Faker $faker) {
         'phone' => $faker->phoneNumber,
         'email' => $faker->unique()->safeEmail,
         'password' => Str::random(10),
-        'last_user' => 'example '
+        'last_user' => 1,
+        'state' => 1
     ];
 });

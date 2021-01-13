@@ -3,6 +3,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Customer;
+use App\User;
 use Faker\Generator as Faker;
 
 /*
@@ -27,7 +28,9 @@ $factory->define(Customer::class, function (Faker $faker) {
         'website' => $faker->domainName,
         'social' => $faker->domainName,
         'history' => $faker->text,
-        'last_user' => 'example',
-        'state' => $faker->numberBetween(0, 1)
+        'last_user' => function () {
+            return User::inRandomOrder()->first()->id;
+        },
+        'is_deleted' => $faker->numberBetween(0, 1)
     ];
 });

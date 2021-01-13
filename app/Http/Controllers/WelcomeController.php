@@ -9,14 +9,11 @@ class WelcomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-    }
-    
-    public function index() 
-    {
-        echo "Hola mundo";
+    public function __construct() { }
 
+    public function index()
+    {
+        echo "Welcome";
     }
     //
 }

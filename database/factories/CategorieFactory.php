@@ -21,7 +21,9 @@ $factory->define(Categorie::class, function (Faker $faker) {
     $user = User::find($faker->numberBetween(1, 2));
     return [
         'name' => $faker->word,
-        'last_user' => $faker->name,
-        'state' => $faker->numberBetween(0, 1)
+        'last_user' => function () {
+            return User::inRandomOrder()->first()->id;
+        },
+        'is_deleted' => $faker->numberBetween(0, 1)
     ];
 });

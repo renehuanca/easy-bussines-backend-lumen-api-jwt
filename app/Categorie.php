@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Product;
 
 class Categorie extends Model
 {
@@ -14,7 +15,15 @@ class Categorie extends Model
     protected $fillable = [
         'name',
         'last_user',
-        'state'
+        'is_deleted'
     ];
+
+    /**
+     * Get the products for the Categories.
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 
 }

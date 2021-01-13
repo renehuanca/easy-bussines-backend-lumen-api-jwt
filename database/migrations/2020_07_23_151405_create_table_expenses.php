@@ -18,8 +18,8 @@ class CreateTableExpenses extends Migration
             $table->string('title');
             $table->double('amount');
             $table->string('type');
-            $table->string('last_user');
-            $table->tinyInteger('state');
+            $table->integer('last_user');
+            $table->tinyInteger('is_deleted');
             $table->timestamps();
         });
     }

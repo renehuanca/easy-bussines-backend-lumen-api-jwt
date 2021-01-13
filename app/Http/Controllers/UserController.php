@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-
-
 use  App\User;
+use Illuminate\Validation\ValidationException;
 
 
 class UserController extends Controller
@@ -25,9 +24,9 @@ class UserController extends Controller
     /**
      * Get all User.
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function showAllUsers()
+    public function index()
     {
         return response()->json(['users' =>  User::all()], 200);
     }
@@ -35,16 +34,15 @@ class UserController extends Controller
     /**
      * Get one user.
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function showOneUser($id)
+    public function edit($id)
     {
         try {
             $user = User::findOrFail($id);
 
             return response()->json(['user' => $user], 200);
-
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             return response()->json(['message' => 'user not found!'], 404);
         }
@@ -52,11 +50,13 @@ class UserController extends Controller
 
     /**
      * Update one user
-     * 
+     *
+     * @param Request $request
      * @param int $id
-     * @return void
+     * @return JsonResponse
+     * @throws ValidationException
      */
-    public function update(Request $request, $id) 
+    public function update(Request $request, $id)
     {
         //validate incoming request
         $this->validate($request, [
@@ -64,21 +64,49 @@ class UserController extends Controller
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|email',
-            'password' => 'required|confirmed',
-            'password_confirmed' => 'required',
         ]);
         $user = User::findOrFail($id);
+
         try {
-        
-            $request->password =  Hash::make($request->password);
-
             $user->update($request->all());
-            //return successful response
-            return response()->json(['user' => $user, 'message' => 'UPDATED'], 200);
 
-        } catch (\Exception $e) {
-            //return error message
+            return response()->json(['user' => $user, 'message' => 'UPDATED'], 200);
+        } catch (Exception $e) {
+
             return response()->json(['message' => 'User update Failed!'], 409);
         }
     }
+
+    /**
+     * activate and inactivate one user in users.state
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function active($id)
+    {
+
+        $user = User::findOrFail($id);
+        $is_active = $user->state;
+        if ($is_active != 1) {
+            $customer = User::where('id', $id)
+                ->update(['state' => 1]);
+
+            // activate user
+            return response()->json(['customer' => $customer, 'message' => 'ACTIVATE USER'], 201);
+        }
+
+        // inactivate user
+        try {
+            $customer = User::where('id', $id)
+                ->update(['state' => 0]);
+
+            return response()->json(['customer' => $customer, 'message' => 'INACTIVATE USER'], 201);
+        } catch (Exception $e) {
+
+            return response()->json(['message' => 'User activate or inactivate Failed!'], 409);
+        }
+    }
+
 }
